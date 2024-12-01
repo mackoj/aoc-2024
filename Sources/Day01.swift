@@ -2,7 +2,7 @@ import Algorithms
 
 struct Day01: AdventDay {
   var data: String
-  
+
   func lists(_ data: String) -> (l1: [Int], l2: [Int]) {
     var l1: [Int] = []
     var l2: [Int] = []
@@ -19,14 +19,14 @@ struct Day01: AdventDay {
     }
     return (l1, l2)
   }
-  
+
   func part1() -> Any {
     let (l1, l2) = lists(data)
     let sortedList = zip(l1.sorted(), l2.sorted())
     let distances = sortedList.map { abs($0 - $1) }
     return distances.reduce(0, +)
   }
-  
+
   func part2() -> Any {
     let (l1, l2) = lists(data)
     return l1.reduce(into: 0) { partialResult, input in
