@@ -7,30 +7,21 @@ import Testing
 struct Day00Tests {
   // Smoke test data provided in the challenge question
   let testData = """
-    1000
-    2000
-    3000
-
-    4000
-
-    5000
-    6000
-
-    7000
-    8000
-    9000
-
-    10000
-
-    """
+3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+"""
 
   @Test func testPart1() async throws {
-    let challenge = Day00(data: testData)
-    #expect(String(describing: challenge.part1()) == "6000")
+    let challenge = Day01(data: testData)
+    #expect(String(describing: challenge.part1()) == "11")
   }
 
   @Test func testPart2() async throws {
-    let challenge = Day00(data: testData)
-    #expect(String(describing: challenge.part2()) == "32000")
+    let challenge = Day01(data: testData)
+    #expect(String(describing: challenge.part2()) == "31")
   }
 }

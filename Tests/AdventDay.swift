@@ -6,7 +6,7 @@ import Testing
 struct AdventDayTests {
 
   @Test func testInitData() async throws {
-    let challenge = Day00()
-    #expect(challenge.data.starts(with: "4514"))
+    let challenge = Day01()
+    #expect(challenge.data.starts(with: "18944   47230"))
   }
 }
