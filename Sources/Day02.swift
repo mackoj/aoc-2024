@@ -30,11 +30,13 @@ struct Day02: AdventDay {
   func isSafeReport(_ levels: [Int]) -> Bool {
     guard levels.count >= 2 else { return false }
     guard let trend = Trend(levels[1] - levels[0]) else { return false }
+
     for i in 1..<levels.count {
       let diff = levels[i] - levels[i - 1]
-      guard let diffTrend = Trend(diff) else { return false }
       let absDiff = abs(diff)
       if absDiff < 1 || absDiff > 3 { return false } // main rule
+
+      guard let diffTrend = Trend(diff) else { return false }
       switch (trend, diffTrend) {
         case (.increasing, .decreasing): return false
         case (.decreasing, .increasing): return false
