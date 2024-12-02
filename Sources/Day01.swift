@@ -1,4 +1,4 @@
-import Algorithms
+import Foundation
 
 struct Day01: AdventDay {
   var data: String
@@ -11,7 +11,7 @@ struct Day01: AdventDay {
     self.list1 = l1
     self.list2 = l2
   }
-  
+
   static func lists(_ data: String) -> (l1: [Int], l2: [Int]) {
     var l1: [Int] = []
     var l2: [Int] = []
