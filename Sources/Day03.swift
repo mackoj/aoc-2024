@@ -3,22 +3,16 @@ import RegexBuilder
 
 struct Day03: AdventDay {
   var data: String
-
-  struct Multiplication: Equatable {
-    let lhs: Int
-    let rhs: Int
-  }
   
   func part1() -> Any {
     let regex = #/mul\((\d{1,3}),(\d{1,3})\)/#
     let matches = data.matches(of: regex)
-    let multiplications = matches.reduce(into: [Multiplication]()) { partialResult, match in
+    return matches.reduce(into: 0) { partialResult, match in
       if let lhs = Int(match.output.1),
          let rhs = Int(match.output.2) {
-        partialResult.append(Multiplication(lhs: lhs, rhs: rhs))
+        partialResult += lhs * rhs
       }
     }
-    return multiplications.reduce(0) { $0 + $1.lhs * $1.rhs }
   }
 
   func part2() -> Any {
@@ -29,18 +23,14 @@ struct Day03: AdventDay {
     let regexDont = #/don\'t\(\)/#
     let matchesDont = data.matches(of: regexDont)
     
-    let multiplications = matchesMul.reduce(into: [Multiplication]()) { partialResult, match in
+    return matchesMul.reduce(into: 0) { partialResult, match in
       var lastDontRange: String.Index?
       var lastDoRange: String.Index?
-      for matchDo in matchesDo {
-        if matchDo.range.lowerBound < match.range.lowerBound {
-          lastDoRange = matchDo.range.lowerBound
-        }
+      for matchDo in matchesDo where matchDo.range.lowerBound < match.range.lowerBound {
+        lastDoRange = matchDo.range.lowerBound
       }
-      for matchDont in matchesDont {
-        if matchDont.range.lowerBound < match.range.lowerBound {
-          lastDontRange = matchDont.range.lowerBound
-        }
+      for matchDont in matchesDont where matchDont.range.lowerBound < match.range.lowerBound {
+        lastDontRange = matchDont.range.lowerBound
       }
       
       switch (lastDoRange, lastDontRange) {
@@ -54,9 +44,8 @@ struct Day03: AdventDay {
       
       if let lhs = Int(match.output.1),
          let rhs = Int(match.output.2) {
-        partialResult.append(Multiplication(lhs: lhs, rhs: rhs))
+        partialResult += lhs * rhs
       }
     }
-    return multiplications.reduce(0) { $0 + $1.lhs * $1.rhs }
   }
 }
