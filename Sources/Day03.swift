@@ -45,11 +45,11 @@ struct Day03: AdventDay {
       
       switch (lastDoRange, lastDontRange) {
         case (.none, .none): break
+        case (.none, .some(_)):  return
+        case (.some(_), .none): break
         case let (.some(doRange), .some(dontRange)):
           if dontRange > doRange { return }
           else { break }
-        case (.none, .some(_)):  return
-        case (.some(_), .none): break
       }
       
       if let lhs = Int(match.output.1),
