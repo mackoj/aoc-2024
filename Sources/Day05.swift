@@ -47,7 +47,7 @@ struct Day05: AdventDay {
     for (x, y) in rules {
       ruleGraph[x, default: []].append(y)
     }
-    var needToBeSorted = !isValidUpdate(update, rules: rules)
+    var needToBeSorted = true
     var output = update
     while needToBeSorted {
       var newOutput: [Int] = []
