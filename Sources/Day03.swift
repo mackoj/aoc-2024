@@ -14,7 +14,7 @@ struct Day03: AdventDay {
       }
     }
   }
-
+  
   func part2() -> Any {
     let regexMul = #/mul\((\d{1,3}),(\d{1,3})\)/#
     let matchesMul = data.matches(of: regexMul)
@@ -23,22 +23,20 @@ struct Day03: AdventDay {
     let regexDont = #/don\'t\(\)/#
     let matchesDont = data.matches(of: regexDont)
     
+    var doPositions: [String.Index] = matchesDo.map { $0.range.lowerBound }
+    var dontPositions: [String.Index] = matchesDont.map { $0.range.lowerBound }
+    
     return matchesMul.reduce(into: 0) { partialResult, match in
-      var lastDontRange: String.Index?
-      var lastDoRange: String.Index?
-      for matchDo in matchesDo where matchDo.range.lowerBound < match.range.lowerBound {
-        lastDoRange = matchDo.range.lowerBound
-      }
-      for matchDont in matchesDont where matchDont.range.lowerBound < match.range.lowerBound {
-        lastDontRange = matchDont.range.lowerBound
-      }
+      let matchPosition = match.range.lowerBound
+      let lastDo = doPositions.last { $0 < matchPosition }
+      let lastDont = dontPositions.last { $0 < matchPosition }
       
-      switch (lastDoRange, lastDontRange) {
+      switch (lastDo, lastDont) {
         case (.none, .none): break
-        case (.none, .some(_)):  return
+        case (.none, .some(_)): return
         case (.some(_), .none): break
-        case let (.some(doRange), .some(dontRange)):
-          if dontRange > doRange { return }
+        case let (.some(doPos), .some(dontPos)):
+          if dontPos > doPos { return }
           else { break }
       }
       
