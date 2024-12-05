@@ -89,13 +89,9 @@ struct Day04: AdventDay {
   }
   
   func part2() -> Any {
-    let grid = data
+    let grid: [[Character]] = data
       .components(separatedBy: .newlines)
-      .reduce(
-      into: [[Character]]()
-    ) { partialResult, sb in
-      partialResult.append(Array(sb))
-    }
+      .map(Array.init)
     var counter = 0
     for (line, row) in grid.enumerated() where line > 0 && line < (grid.count - 2) {
       for (column, character) in row.enumerated() where column > 0 && column < (row.count - 1) {
