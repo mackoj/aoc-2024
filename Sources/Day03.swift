@@ -23,8 +23,8 @@ struct Day03: AdventDay {
     let regexDont = #/don\'t\(\)/#
     let matchesDont = data.matches(of: regexDont)
     
-    var doPositions: [String.Index] = matchesDo.map { $0.range.lowerBound }
-    var dontPositions: [String.Index] = matchesDont.map { $0.range.lowerBound }
+    let doPositions: [String.Index] = matchesDo.map { $0.range.lowerBound }
+    let dontPositions: [String.Index] = matchesDont.map { $0.range.lowerBound }
     
     return matchesMul.reduce(into: 0) { partialResult, match in
       let matchPosition = match.range.lowerBound
