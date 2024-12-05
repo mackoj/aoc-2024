@@ -40,7 +40,7 @@ struct Day02: AdventDay {
       switch (trend, diffTrend) {
       case (.increasing, .decreasing): return false
       case (.decreasing, .increasing): return false
-      default: break // second main rule
+      default: break  // second main rule
       }
     }
     return true
