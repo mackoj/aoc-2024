@@ -43,33 +43,27 @@ struct Day05: AdventDay {
   }
   
   func sortUpdates(_ update: [Int], rules: [(Int, Int)]) -> [Int] {
-    var ruleGraph: [Int: [Int]] = [:]
+    var orderByPage = [Int: Set<Int>]()
     for (x, y) in rules {
-      ruleGraph[x, default: []].append(y)
+      orderByPage[x, default: []].insert(y)
     }
+    
+    var newUpdate = update
     var needToBeSorted = true
-    var output = update
     while needToBeSorted {
-      var newOutput: [Int] = []
-      for (idx, page) in output.enumerated() {
-        let head = idx > 0 ? output[...(idx-1)] : []
-        let tail = ((idx + 1) < output.count) ? output[(idx+1)...] : []
-        let numberThatShouldBeAfterMe = Set<Int>(ruleGraph[page] ?? [])
-        let numberThatAreAfterMe = Set<Int>(tail)
-        let numberToMoveBeforeMe = numberThatAreAfterMe.subtracting(numberThatShouldBeAfterMe)
-        let numberThatWillBeAfterMe = numberThatAreAfterMe.intersection(numberThatShouldBeAfterMe)
-        newOutput = head + numberToMoveBeforeMe + [page] + tail.filter { numberThatWillBeAfterMe.contains($0) }
-        if output != newOutput {
-          output = newOutput
-          break
+      needToBeSorted = false
+      for i in 0..<newUpdate.count {
+        for j in (i + 1)..<newUpdate.count {
+          if let pagesThatAreAfter = orderByPage[newUpdate[i]], pagesThatAreAfter.contains(newUpdate[j]) {
+            newUpdate.swapAt(i, j)
+            needToBeSorted = true
+          }
         }
       }
-      needToBeSorted = !isValidUpdate(output, rules: rules)
     }
-    return output
+    return newUpdate
   }
-  
-  
+
   func part1() -> Any {
     return updates.reduce(into: 0) { partialResult, update in
       if isValidUpdate(update, rules: self.rules) {
