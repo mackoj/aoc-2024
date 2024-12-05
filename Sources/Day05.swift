@@ -4,7 +4,7 @@ struct Day05: AdventDay {
   var data: String
   let rules: [(Int, Int)]
   let updates: [[Int]]
-
+  
   init(data: String) {
     self.data = data
     var rules: [(Int, Int)] = []
@@ -41,11 +41,10 @@ struct Day05: AdventDay {
     }
     return true
   }
-
+  
   func sortUpdates(_ update: [Int], rules: [(Int, Int)]) -> [Int] {
     var ruleGraph: [Int: [Int]] = [:]
     for (x, y) in rules {
-//      ruleGraph[y, default: []].append(x)
       ruleGraph[x, default: []].append(y)
     }
     var needToBeSorted = !isValidUpdate(update, rules: rules)
@@ -65,7 +64,6 @@ struct Day05: AdventDay {
           break
         }
       }
-      // 97,75,47,61,53
       needToBeSorted = !isValidUpdate(output, rules: rules)
     }
     return output
@@ -83,8 +81,7 @@ struct Day05: AdventDay {
   func part2() -> Any {
     return updates.reduce(into: 0) { partialResult, update in
       if isValidUpdate(update, rules: self.rules) == false {
-        var sorted = sortUpdates(update, rules: self.rules)
-//        print("\(update) | \(sorted)")
+        let sorted = sortUpdates(update, rules: self.rules)
         partialResult += sorted[sorted.count/2]
       }
     }
