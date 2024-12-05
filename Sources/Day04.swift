@@ -3,10 +3,6 @@ import Foundation
 struct Day04: AdventDay {
   var data: String
   
-  init(data: String) {
-    self.data = data
-  }
-  
   func extractVerticalInput(_ horizontalInput: [String]) -> [String] {
     guard let firstLine = horizontalInput.first, !firstLine.isEmpty else { return [] }
     let charCount = firstLine.count
