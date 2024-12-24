@@ -1,5 +1,4 @@
 import Foundation
-import Algorithms
 
 struct Day07: AdventDay {
   struct Operator: CustomStringConvertible {
@@ -8,12 +7,11 @@ struct Day07: AdventDay {
     var description: String { name }
   }
   
-  var data: String
-  
-  func mainAlgo(_ operators: [Operator]) -> Int {
-    var operations = 0
+  let numberByResult: [Int: [Int]]
+
+  init(data: String) {    
+    var numberByResult: [Int: [Int]] = [:]
     data.enumerateLines { line, _ in
-      // Prepare Input
       let resultAndOperations = line.components(separatedBy: ":")
       guard
         let first = resultAndOperations.first,
@@ -24,10 +22,19 @@ struct Day07: AdventDay {
       let numbers = last
         .components(separatedBy: .whitespaces)
         .compactMap(Int.init)
+      numberByResult[targetResult] = numbers
+    }
+
+    self.numberByResult = numberByResult
+  }
+  
+  func mainAlgo(_ operators: [Operator]) -> Int {
+    return numberByResult.reduce(into: 0) { acc, nbr in
+      let numbers = nbr.value
+      let targetResult = nbr.key
       if isRunningTests {
         print("➡️ result: \(targetResult) - numbers: \(numbers)")
       }
-      
       let possibilities = operators.generateCombinations(count: numbers.count - 1)
       
       for possibility in possibilities {
@@ -37,19 +44,17 @@ struct Day07: AdventDay {
         }
         
         if result == targetResult {
-          operations += targetResult
+          acc += targetResult
           if isRunningTests {
             print("✅ result: \(targetResult) - possibility: \(possibility)")
           }
           return
         }
       }
-      
       if isRunningTests {
         print("🛑 result: \(targetResult) - possibilities: \(possibilities)")
       }
     }
-    return operations
   }
   
   func part1() -> Any {
