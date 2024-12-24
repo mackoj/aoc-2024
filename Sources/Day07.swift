@@ -9,7 +9,7 @@ struct Day07: AdventDay {
   
   let numberByResult: [Int: [Int]]
 
-  init(data: String) {    
+  init(data: String) {
     var numberByResult: [Int: [Int]] = [:]
     data.enumerateLines { line, _ in
       let resultAndOperations = line.components(separatedBy: ":")
@@ -46,7 +46,7 @@ struct Day07: AdventDay {
         if result == targetResult {
           acc += targetResult
           if isRunningTests {
-            print("✅ result: \(targetResult) - possibility: \(possibility)")
+            print("✅ result: \(targetResult) - \(possibility)")
           }
           return
         }
