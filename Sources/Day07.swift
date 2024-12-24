@@ -7,154 +7,86 @@ var isRunningTests: Bool {
 }
 
 struct Day07: AdventDay {
-  var data: String
-  
-  init(data: String) {
-    self.data = data
+  struct Operator: CustomStringConvertible {
+    let name: String
+    let operation: (Int, Int) -> Int
+    var description: String { name }
   }
   
-  func generateCombinations<T>(from array: [T], count: Int) -> [[T]] {
-      guard count > 0 else { return [[]] }
+  var data: String
+  
+  func mainAlgo(_ operators: [Operator]) -> Int {
+    var operations = 0
+    data.enumerateLines { line, _ in
+      // Prepare Input
+      let resultAndOperations = line.components(separatedBy: ":")
+      guard
+        let first = resultAndOperations.first,
+        let last = resultAndOperations.last,
+        let targetResult = Int(first)
+      else { return }
       
-      var result: [[T]] = [[]]
-      
-      for _ in 0..<count {
-          result = result.flatMap { current in
-              array.map { element in
-                  current + [element]
-              }
-          }
+      let numbers = last
+        .components(separatedBy: .whitespaces)
+        .compactMap(Int.init)
+      if isRunningTests {
+        print("➡️ result: \(targetResult) - numbers: \(numbers)")
       }
       
-      return result
+      let possibilities = operators.generateCombinations(count: numbers.count - 1)
+      
+      for possibility in possibilities {
+        var result = numbers[0]
+        for (index, op) in possibility.enumerated() {
+          result = op.operation(result, numbers[index + 1])
+        }
+        
+        if result == targetResult {
+          operations += targetResult
+          if isRunningTests {
+            print("✅ result: \(targetResult) - possibility: \(possibility)")
+          }
+          return
+        }
+      }
+      
+      if isRunningTests {
+        print("🛑 result: \(targetResult) - possibilities: \(possibilities)")
+      }
+    }
+    return operations
   }
   
   func part1() -> Any {
-    let operators: [String] = [
-      "add",
-      "mul",
+    let operators: [Operator] = [
+      Operator(name: "Add", operation: { $0 + $1 }),
+      Operator(name: "Multiply", operation: { $0 * $1 }),
     ]
-    var operations: Int = 0
-    data
-      .enumerateLines {
-        line,
-        _ in
-        // Prepare Input
-        let resultAndOperations = line.components(separatedBy: ":")
-        guard
-          let first = resultAndOperations.first,
-          let last = resultAndOperations.last,
-          let operationResult = Int(first)
-        else { return }
-        let remainingNumbers = last
-          .components(separatedBy: .whitespaces)
-          .compactMap(Int.init)
-        
-        let possibilities = generateCombinations(
-          from: operators,
-          count: remainingNumbers.count - 1
-        )
-        if isRunningTests {
-          print("possibilities:", possibilities)
-        }
-        let res = possibilities.reduce(into: [Int: [String]]()) { result, possibility in
-          var cons = remainingNumbers
-          var possibility = possibility
-          var possibility2 = possibility
-          var output = 0
-          while cons.count > 0 {
-            if output == 0 {
-              output = cons.removeFirst()
-            } else {
-              let l = cons.removeFirst()
-              let op = possibility.removeFirst()
-              switch op {
-                case "add": output += l
-                case "mul": output *= l
-                default: break
-              }
-            }
-          }
-          result[output] = possibility2
-        }
-        if res[operationResult] != nil {
-          if isRunningTests {
-            print("✅ result: \(operationResult) - \(res[operationResult]!)")
-          }
-          operations += operationResult
-        } else {
-          if isRunningTests {
-            print("🛑 result: \(operationResult)")
-          }
-        }
-      }
-    return operations
+    return mainAlgo(operators)
   }
   
   func part2() -> Any {
-    let operators: [String] = [
-      "add",
-      "mul",
-      "concat",
+    let operators: [Operator] = [
+      Operator(name: "Add", operation: { $0 + $1 }),
+      Operator(name: "Multiply", operation: { $0 * $1 }),
+      Operator(name: "Concat", operation: { Int("\($0)\($1)")! }),
     ]
-    var operations: Int = 0
-    data
-      .enumerateLines {
-        line,
-        _ in
-        // Prepare Input
-        let resultAndOperations = line.components(separatedBy: ":")
-        guard
-          let first = resultAndOperations.first,
-          let last = resultAndOperations.last,
-          let operationResult = Int(first)
-        else { return }
-        let remainingNumbers = last
-          .components(separatedBy: .whitespaces)
-          .compactMap(Int.init)
-        
-        let possibilities = generateCombinations(
-          from: operators,
-          count: remainingNumbers.count - 1
-        )
-        if isRunningTests {
-          print("possibilities:", possibilities)
-        }
-        let res = possibilities.reduce(into: [Int: [String]]()) { result, possibility in
-          var cons = remainingNumbers
-          var possibility = possibility
-          var possibility2 = possibility
-          var output = 0
-          while cons.count > 0 {
-            if output == 0 {
-              output = cons.removeFirst()
-            } else {
-              let l = cons.removeFirst()
-              let op = possibility.removeFirst()
-              switch op {
-                case "add": output += l
-                case "mul": output *= l
-                case "concat":
-                  if let nv = Int("\(output)\(l)") {
-                    output = nv
-                  }
-                default: break
-              }
-            }
-          }
-          result[output] = possibility2
-        }
-        if res[operationResult] != nil {
-          if isRunningTests {
-            print("✅ result: \(operationResult) - \(res[operationResult]!)")
-          }
-          operations += operationResult
-        } else {
-          if isRunningTests {
-            print("🛑 result: \(operationResult) - \(remainingNumbers)")
-          }
+    return mainAlgo(operators)
+  }
+}
+
+extension Array {
+  func generateCombinations(count: Int) -> [[Element]] {
+    guard count > 0 else { return [[]] }
+    var result: [[Element]] = [[]]
+    for _ in 0..<count {
+      result = result.flatMap { current in
+        self.map { element in
+          current + [element]
         }
       }
-    return operations
+    }
+    return result
   }
+  
 }
