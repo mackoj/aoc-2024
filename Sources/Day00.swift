@@ -3,10 +3,6 @@ import Foundation
 struct Day00: AdventDay {
   var data: String
 
-  init(data: String) {
-    self.data = data
-  }
-
   func part1() -> Any {
     return 0
   }

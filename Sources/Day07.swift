@@ -1,11 +1,6 @@
 import Foundation
 import Algorithms
 
-
-var isRunningTests: Bool {
-  return ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-}
-
 struct Day07: AdventDay {
   struct Operator: CustomStringConvertible {
     let name: String
@@ -73,20 +68,4 @@ struct Day07: AdventDay {
     ]
     return mainAlgo(operators)
   }
-}
-
-extension Array {
-  func generateCombinations(count: Int) -> [[Element]] {
-    guard count > 0 else { return [[]] }
-    var result: [[Element]] = [[]]
-    for _ in 0..<count {
-      result = result.flatMap { current in
-        self.map { element in
-          current + [element]
-        }
-      }
-    }
-    return result
-  }
-  
 }

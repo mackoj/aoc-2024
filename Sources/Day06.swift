@@ -3,7 +3,7 @@ import Algorithms
 
 struct Day06: AdventDay {
   var data: String
-  let grid: [[Character]]
+  let grid: Grid
   let guardian: Point?
   let obstructions: Set<Point>
   let obstruction: Character = "#"
@@ -65,21 +65,6 @@ struct Day06: AdventDay {
     return (nil, path, orientation)
   }
   
-  func buildDebugOutput(
-    path: Set<Point>,
-    _ newBlocker: Set<Point> = Set<Point>()
-  ) {
-    var newoutput = grid
-    for point in path {
-      newoutput[point.x][point.y] = "X"
-    }
-    newoutput[guardian!.x][guardian!.y] = Orientation.top.rawValue
-    for blocker in newBlocker {
-      newoutput[blocker.x][blocker.y] = "O"
-    }
-    print(newoutput.map { String($0) }.joined(separator: "\n"))
-  }
-  
   func part1() -> Any {
     guard let guardian else { return 0 }
     guard var orientation = Orientation(rawValue: grid[guardian.x][guardian.y]) else {
@@ -92,8 +77,13 @@ struct Day06: AdventDay {
     while patroling {
       let (newGuardianPosition, locations, nextOrientation) = findNextObstruction(from: movingGuardian, orientation: orientation)
       path.formUnion(locations)
-      //      buildDebugOutput(path: path, newBlockers)
-      
+      if isRunningTests {
+        print(grid.buildDebugOutput(customs: [
+          "X": path,
+          "^": Set([guardian])
+        ]))
+      }
+
       if let newGuardianPosition {
         movingGuardian = newGuardianPosition
         orientation = nextOrientation
@@ -160,7 +150,13 @@ struct Day06: AdventDay {
       let (newGuardianPosition, locations, nextOrientation) = findNextObstruction(from: movingGuardian, orientation: orientation)
       path.formUnion(locations)
       lineSegments.append(locations)
-      buildDebugOutput(path: path, newBlockers)
+      if isRunningTests {
+        print(grid.buildDebugOutput(customs: [
+          "X": path,
+          "O": newBlockers,
+          "^": Set([guardian])
+        ]))
+      }
       if lineSegments.count > 2 {
         if let blocker = willItLoop2(path, locations, nextOrientation) {
           newBlockers.insert(blocker)
